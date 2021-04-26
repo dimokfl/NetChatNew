@@ -1,0 +1,26 @@
+.button{
+    -fx-background-color: #2cff29;
+    -fx-padding: 5px;
+    -fx-border-insets: 5px;
+    -fx-background-insets: 5px;
+}
+
+.button:hover, #btn2:hover{
+    -fx-background-color: #3dd2ff;
+    -fx-font-size: 15px
+}
+
+.text-area{
+    -fx-background-color: #fbffc9;
+    -fx-control-inner-background: #c5bfff;
+    -fx-text-fill: #0a0a0d;
+    -fx-highlight-text-fill: yellow;
+    -fx-highlight-fill: blue;
+    -fx-font-weight: bold;
+    /*-fx-font-style: italic;*/
+}
+
+/*.menu{
+    -fx-background-color: #ffb3b3;
+}*/
+
