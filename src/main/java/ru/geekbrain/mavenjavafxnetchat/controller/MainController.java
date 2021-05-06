@@ -20,12 +20,6 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
 
     @FXML
-    private TextField sendText;
-    @FXML
-    private TextArea primaryTextArea;
-
-
-    @FXML
     TextField msgField, usernameField;
 
     @FXML
@@ -152,33 +146,10 @@ public class MainController implements Initializable {
         try {
             if (socket != null) {
                 socket.close();
+
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
-
-
-
-
-//    @FXML
-//    public void clickSend(ActionEvent actionEvent) {
-//        primaryTextArea.appendText(" Вы: " + sendText.getText()+"\n");
-//        sendText.clear();
-//        sendText.requestFocus();
-//    }
-//
-//    @FXML
-//    public void close(ActionEvent actionEvent) {
-//        System.exit(0);
-//    }
-//
-//    @FXML
-//    public void clickSendEnter(ActionEvent actionEvent) {
-//        primaryTextArea.appendText(" Вы: " + sendText.getText()+"\n");
-//        sendText.clear();
-//        sendText.requestFocus();
-//    }
 }

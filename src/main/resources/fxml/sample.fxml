@@ -13,7 +13,7 @@
 
     <HBox VBox.vgrow="ALWAYS">
         <TextArea fx:id="msgArea" HBox.hgrow="ALWAYS" editable="false" wrapText="true"/>
-        <ListView fx:id="clientsList" prefWidth="150" maxWidth="150" minWidth="150"/>
+        <ListView fx:id="clientsList" prefWidth="250" maxWidth="250" minWidth="250"/>
     </HBox>
 
     <HBox fx:id="msgPanel">
