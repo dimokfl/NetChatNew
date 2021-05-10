@@ -1,17 +1,12 @@
 package ru.geekbrain.mavenjavafxnetchat.controller;
+
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 
-import java.awt.event.KeyEvent;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -35,6 +30,11 @@ public class MainController implements Initializable {
     private DataInputStream in;
     private DataOutputStream out;
     private String username;
+    private String login;
+    private File inputMsg;
+    private FileReader reader;
+    private FileWriter writer;
+
 
     public void setUsername(String username) {
         this.username = username;
@@ -73,6 +73,7 @@ public class MainController implements Initializable {
 
         try {
             out.writeUTF("/login " + usernameField.getText());
+            login = usernameField.getText();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -115,7 +116,13 @@ public class MainController implements Initializable {
                             }
                             continue;
                         }
+
+                        writeLogChat();
                         msgArea.appendText(msg + "\n");
+                        if (writer != null) {
+                            writer.write(msg + "\n");
+                            writer.flush();
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -141,12 +148,25 @@ public class MainController implements Initializable {
         }
     }
 
+    public void writeLogChat() {
+        inputMsg = new File("history_" + login + ".txt");
+        try {
+//            reader = new FileReader(inputMsg);
+            writer = new FileWriter(inputMsg, true);
+            if (!inputMsg.exists()) {
+                inputMsg.createNewFile();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void disconnect() {
         setUsername(null);
         try {
             if (socket != null) {
                 socket.close();
-
             }
         } catch (IOException e) {
             e.printStackTrace();
