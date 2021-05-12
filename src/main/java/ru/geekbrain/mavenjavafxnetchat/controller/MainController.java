@@ -5,14 +5,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import org.apache.commons.io.input.ReversedLinesFileReader;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 
-public class MainController implements Initializable {
+public class MainController<MASSAGE_MAX> implements Initializable {
 
     @FXML
     TextField msgField, usernameField;
@@ -34,6 +37,10 @@ public class MainController implements Initializable {
     private File inputMsg;
     private FileReader reader;
     private FileWriter writer;
+    private ReversedLinesFileReader reversedLinesFileReader;
+    private List<String> list;
+    private final int MASSAGE_PRINT_MAX = 100;
+
 
 
     public void setUsername(String username) {
@@ -98,9 +105,17 @@ public class MainController implements Initializable {
                             msgArea.appendText(cause + "\n");
                         }
                     }
+
+                    // Запуск логгирования истории чата
+                    Platform.runLater(() -> {
+                        System.out.println(Thread.currentThread().getName());
+                    logHistoryChat();
+                    });
+
                     // Цикл общения
                     while (true) {
                         String msg = in.readUTF();
+
                         if (msg.startsWith("/")) {
                             if (msg.startsWith("/clients_list ")) {
                                 // /clients_list Bob Max Jack
@@ -113,12 +128,13 @@ public class MainController implements Initializable {
                                         clientsList.getItems().add(tokens[i]);
                                     }
                                 });
+
                             }
                             continue;
                         }
 
-                        writeLogChat();
                         msgArea.appendText(msg + "\n");
+
                         if (writer != null) {
                             writer.write(msg + "\n");
                             writer.flush();
@@ -148,18 +164,31 @@ public class MainController implements Initializable {
         }
     }
 
-    public void writeLogChat() {
+    public void logHistoryChat() {
         inputMsg = new File("history_" + login + ".txt");
+        int massageStart = 0;
         try {
-//            reader = new FileReader(inputMsg);
-            writer = new FileWriter(inputMsg, true);
             if (!inputMsg.exists()) {
                 inputMsg.createNewFile();
+            }
+            if (inputMsg.exists()) {
+                writer = new FileWriter(inputMsg, true);
+                reader = new FileReader(inputMsg);
+                reversedLinesFileReader = new ReversedLinesFileReader(inputMsg, null);
+                String readLine = reversedLinesFileReader.readLine();
+                list = new ArrayList<>();
+                while (readLine != null && massageStart <= MASSAGE_PRINT_MAX){
+                    list.add(readLine);
+                    readLine = reversedLinesFileReader.readLine();
+                    massageStart++;
+                }
+                for (int i = list.size()-1; i >= 0; i--) {
+                    msgArea.appendText(list.get(i) + "\n");
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private void disconnect() {
